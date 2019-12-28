@@ -7,6 +7,7 @@ import json
 import service as srv
 import utilities as utl
 import dataInterface as db
+import validation as vld
 app = Flask(__name__)
 api = Api(app)
 
@@ -26,46 +27,22 @@ def newGame():
         return response
     
    
-@app.route('/game/<id>/movement',methods=['POST'])
-def newMovement(id):
+@app.route('/game/movement',methods=['POST'])
+def newMovement():
     headers = {"Content-Type": "application/json"}
     try:
         body = rq.json
-        gameId = body['id']
-        player = body['player']
-        position = body['position']
-        if not srv.isGame(gameId):
-            jsonData = {
-                "msg": "Partida não encontrada"
-            }
-            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
-            return response
-
-        if not srv.isTurn(player):
-            jsonData = {
-                "msg": "Não é turno do jogador"
-            }
-            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
-            return response
-        if srv.finishedGame(gameId):
-            jsonData = srv.getGameResult(gameId)
-            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
-            return response
+        
+        if vld.isBodyValid(body):
+            print(body.keys())
+            jsonData, status = srv.doMovement(body)
+            response = make_response(jsonData, status)
         else:
-            stsMov = db.setMovement(body)
-            if stsMov: #partida ainda não acabou
-                jsonData = {
-                    "msg": "Jogada Registrada com sucesso"
-                }
-                response = make_response(jsonData,HTTPStatus.OK)
-                return response
-            else: #esta foi a ultima jogada possível
-                jsonData = srv.getGameResult(gameId)
-                response = make_response(jsonData,HTTPStatus.OK)
-                return response
-
-        response = make_response('jsonData',HTTPStatus.OK)
-        return response 
+            jsonData = {
+                "msg": "Formato de Body inválito para esta requisição"
+            }
+            response = make_response(jsonData, HTTPStatus.BAD_REQUEST)
+        return response
     except Exception as e:
         jsonData = {
             "exception": str(type(e).__name__),
