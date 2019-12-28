@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from flask_restful import Resource, Api
-from flask import Flask, request as rq
+from flask import Flask, request as rq, make_response
 import importlib as imp
 import sys
 import json
@@ -13,17 +13,18 @@ def newGame():
     headers = {"Content-Type": "application/json"}
     gameId = utl.genGameId()
     firstPlayer = utl.genFirst()
-    response = flask.make_response(response = flask.make_response(jsonData,HTTPStatus.OK, headers=headers)
+    jsonData = {
+        "id":gameId,
+        "firstPlayer": firstPlayer
+    }
+    response = make_response(jsonData,HTTPStatus.OK)
+    return response
    
-    return 'response', HTTPStatus.OK
-   
-# @app.route('game/<id>/movement',methods=['POST'])
-# def newMovment():
-#      headers = {"Content-Type": "application/json"}
-#      try:
-#          return response, HTTPStatus.OK
-#      except expression as identifier:
-#         return error, HTTPStatus.BAD_REQUEST
+@app.route('game/<id>/movement',methods=['POST'])
+def newMovement():
+     headers = {"Content-Type": "application/json"}
+    
+    
 
 
 if __name__ == '__main__':
