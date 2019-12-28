@@ -5,6 +5,8 @@ import importlib as imp
 import sys
 import json
 import utilities as utl
+import validation as vld
+import dataInterface as db
 app = Flask(__name__)
 api = Api(app)
 
@@ -20,11 +22,53 @@ def newGame():
     response = make_response(jsonData,HTTPStatus.OK)
     return response
    
-@app.route('game/<id>/movement',methods=['POST'])
-def newMovement():
-     headers = {"Content-Type": "application/json"}
-    
-    
+@app.route('/game/<id>/movement',methods=['POST'])
+def newMovement(id):
+    headers = {"Content-Type": "application/json"}
+    try:
+        body = rq.json
+        gameId = body['id']
+        player = body['player']
+        position = body['position']
+        if not vld.isGame(gameId):
+            jsonData = {
+                "msg": "Partida não encontrada"
+            }
+            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
+            return response
+
+        if not vld.isTurn(player):
+            jsonData = {
+                "msg": "Não é turno do jogador"
+            }
+            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
+            return response
+        if vld.finishedGame(gameId):
+            jsonData = vld.getGameResult(gameId)
+            response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
+            return response
+        else:
+            stsMov = db.setMovement(body)
+            if stsMov: #partida ainda não acabou
+                jsonData = {
+                    "msg": "Jogada Registrada com sucesso"
+                }
+                response = make_response(jsonData,HTTPStatus.OK)
+                return response
+            else: #esta foi a ultima jogada possível
+                jsonData = vld.getGameResult(gameId)
+                response = make_response(jsonData,HTTPStatus.OK)
+                return response
+
+        response = make_response('jsonData',HTTPStatus.OK)
+        return response 
+    except Exception as e:
+        jsonData = {
+            "exception": str(type(e).__name__),
+            "message": e.args[0]
+        }
+        response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
+        return response
 
 
 if __name__ == '__main__':
