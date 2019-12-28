@@ -12,3 +12,7 @@ def genGameId(chars=string.digits + string.ascii_letters ):
 
 def genFirst():
     return random.choice('X'+'O')
+
+def saveGame(dataDict):
+    game = dataDict['id']
+    print("Arquivo de dados %s criado."% game)

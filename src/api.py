@@ -4,8 +4,8 @@ from flask import Flask, request as rq, make_response
 import importlib as imp
 import sys
 import json
+import service as srv
 import utilities as utl
-import validation as vld
 import dataInterface as db
 app = Flask(__name__)
 api = Api(app)
@@ -13,14 +13,18 @@ api = Api(app)
 @app.route('/game', methods=['POST'])
 def newGame():
     headers = {"Content-Type": "application/json"}
-    gameId = utl.genGameId()
-    firstPlayer = utl.genFirst()
-    jsonData = {
-        "id":gameId,
-        "firstPlayer": firstPlayer
-    }
-    response = make_response(jsonData,HTTPStatus.OK)
-    return response
+    try:
+        jsonData = srv.newGame()
+        response = make_response(jsonData,HTTPStatus.OK)
+        return response
+    except Exception as e:
+        jsonData = {
+            "exception": str(type(e).__name__),
+            "message": e.args[0]
+        }
+        response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
+        return response
+    
    
 @app.route('/game/<id>/movement',methods=['POST'])
 def newMovement(id):
@@ -30,21 +34,21 @@ def newMovement(id):
         gameId = body['id']
         player = body['player']
         position = body['position']
-        if not vld.isGame(gameId):
+        if not srv.isGame(gameId):
             jsonData = {
                 "msg": "Partida não encontrada"
             }
             response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
             return response
 
-        if not vld.isTurn(player):
+        if not srv.isTurn(player):
             jsonData = {
                 "msg": "Não é turno do jogador"
             }
             response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
             return response
-        if vld.finishedGame(gameId):
-            jsonData = vld.getGameResult(gameId)
+        if srv.finishedGame(gameId):
+            jsonData = srv.getGameResult(gameId)
             response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
             return response
         else:
@@ -56,7 +60,7 @@ def newMovement(id):
                 response = make_response(jsonData,HTTPStatus.OK)
                 return response
             else: #esta foi a ultima jogada possível
-                jsonData = vld.getGameResult(gameId)
+                jsonData = srv.getGameResult(gameId)
                 response = make_response(jsonData,HTTPStatus.OK)
                 return response
 
