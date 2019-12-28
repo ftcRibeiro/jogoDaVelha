@@ -11,7 +11,8 @@ api = Api(app)
 @app.route('/game', methods=['POST'])
 def newGame():
     headers = {"Content-Type": "application/json"}
-
+    gameId = utl.genGameId()
+    firstPlayer = utl.genFirst()
     response = flask.make_response(response = flask.make_response(jsonData,HTTPStatus.OK, headers=headers)
    
     return 'response', HTTPStatus.OK
