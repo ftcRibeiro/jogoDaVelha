@@ -61,8 +61,7 @@ def doMovement(mov):
                 "msg": "Partida não encontrada"
             }
             return jsonData, HTTPStatus.BAD_REQUEST
-        else:
-            gameData = db.getGameData(gameId)
+        
         if not db.isTurn(player):
             jsonData = {
                 "msg": "Não é turno do jogador"
