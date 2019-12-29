@@ -5,6 +5,8 @@ def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
     with open(fileName,'w',newline='') as file:
         writer = csv.writer(file)
+        file.write('player,x,y,nextPlayer,gameStatus')
+        file.write('\n,,,%s,opened'%game['firstPlayer'])
 
 def isGame(gameId):
     name = gameId + '.csv'
