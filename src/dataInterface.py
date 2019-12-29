@@ -1,7 +1,7 @@
 import csv
 import os
 from os import path
-DATABASE = 'database/'
+DATABASE = 'src/database/'
 def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
     with open(fileName,'w',newline='') as file:
@@ -32,7 +32,7 @@ def setMovement(mov):
     else:
         nextPlayer = 'X'
     fileName = DATABASE + mov['id']+'.csv'
-    with open(fileName,'wb') as file:
+    with open(fileName,'a') as file:
         file.write('\n%s,%s,%s,%s'%(mov['player'],mov['position']['x'],
                     mov['position']['y'],nextPlayer))
 def isTurn(gameId, player):
