@@ -5,8 +5,8 @@ def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
     with open(fileName,'w',newline='') as file:
         writer = csv.writer(file)
-        file.write('player,x,y,nextPlayer,gameStatus')
-        file.write('\n,,,%s,opened'%game['firstPlayer'])
+        file.write('player,x,y,nextPlayer')
+        file.write('\n,,,%s'%game['firstPlayer'])
 
 def isGame(gameId):
     name = gameId + '.csv'
@@ -23,8 +23,13 @@ def getGameResult(game):
     return {
     }
 def setMovement(mov):
-    return True
-
+    if mov['player']== 'X':
+        nextPlayer = 'O'
+    else:
+        nextPlayer = 'X'
+    with open('csvfile.csv','wb') as file:
+        file.write('\n%s,%s,%s,%s'%(mov['player'],mov['position']['x'],
+                    mov['position']['y'],nextPlayer))
 def isTurn(player):
     return True
 
