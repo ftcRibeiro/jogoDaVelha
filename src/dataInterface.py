@@ -1,11 +1,20 @@
 import csv
+import os
+DATABASE = 'database/'
 def createGame(game):
-    pass
+    fileName = DATABASE + game['id'] +'.csv'
+    with open(fileName,'w',newline='') as file:
+        writer = csv.writer(file)
 
-def isGame(game):
-    return True
+def isGame(gameId):
+    name = gameId + '.csv'
+    for root, dirs, files in os.walk(DATABASE)
+        if name in files:
+            return True
+        else:
+            return False
 
-def finishedGame(game):
+def finishedGame(gameData):
     return True
 
 def getGameResult(game):
