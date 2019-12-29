@@ -1,5 +1,6 @@
 import csv
 import os
+from os import path
 DATABASE = 'database/'
 def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
@@ -9,19 +10,22 @@ def createGame(game):
         file.write('\n,,,%s'%game['firstPlayer'])
 
 def isGame(gameId):
-    name = gameId + '.csv'
-    for root, dirs, files in os.walk(DATABASE):
-        if name in files:
-            return True
-        else:
-            return False
+    name = DATABASE+gameId + '.csv'
+    fileExists = path.exists(name)
+    return fileExists
+    # for root, dirs, files in os.walk(DATABASE):
+    #     if name in files:
+    #         return True
+    #     else:
+    #         return False
 
 def finishedGame(gameId):
-    lastLine = _readLastLine(DATABASE + gameId + '.csv')
+    # lastLine = _readLastLine(DATABASE + gameId + '.csv')
+    return False
 
 def getGameResult(game):
-    return {
-    }
+    pass
+    
 def setMovement(mov):
     if mov['player']== 'X':
         nextPlayer = 'O'
@@ -38,9 +42,6 @@ def isTurn(gameId, player):
         return True
     else:
         return False
-
-def getGameData(gameId):
-    return True
 
 def _readLastLine(fileName):
     with open(fileName) as file:

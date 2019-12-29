@@ -17,3 +17,6 @@ Caso este comando não funcione, devido a possíveis versões de pip e python in
 
 Após sucesso na instalação, basta utilizar executar o arquivo principal do sistema:
     python api.py
+
+# Execução
+Para execução do sistema, basta

@@ -62,7 +62,7 @@ def doMovement(mov):
             }
             return jsonData, HTTPStatus.BAD_REQUEST
         
-        if not db.isTurn(player):
+        if not db.isTurn(gameId,player):
             jsonData = {
                 "msg": "Não é turno do jogador"
             }
