@@ -1,6 +1,7 @@
 import csv
 import os
 from os import path
+from http import HTTPStatus
 DATABASE = 'src/database/'
 def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
@@ -24,17 +25,29 @@ def finishedGame(gameId):
     return False
 
 def getGameResult(game):
-    pass
+    return {}, 'aberto'
     
 def setMovement(mov):
-    if mov['player']== 'X':
-        nextPlayer = 'O'
-    else:
-        nextPlayer = 'X'
     fileName = DATABASE + mov['id']+'.csv'
-    with open(fileName,'a') as file:
-        file.write('\n%s,%s,%s,%s'%(mov['player'],mov['position']['x'],
-                    mov['position']['y'],nextPlayer))
+    if _validMovement(mov,fileName):
+        if mov['player']== 'X':
+            nextPlayer = 'O'
+        else:
+            nextPlayer = 'X'
+        
+        with open(fileName,'a') as file:
+            file.write('\n%s,%s,%s,%s'%(mov['player'],mov['position']['x'],
+                        mov['position']['y'],nextPlayer))
+        jsonData = {
+                "msg": "Jogada Registrada com sucesso"
+            }
+        return jsonData, HTTPStatus.OK
+    else:
+        jsonData = {
+                "msg": "Não é possível fazer essa jogada. Campo já preenchido"
+            }
+        return jsonData, HTTPStatus.BAD_REQUEST
+
 def isTurn(gameId, player):
     fileName = DATABASE + gameId + '.csv'
     lastLine = _readLastLine(fileName)
@@ -47,3 +60,13 @@ def _readLastLine(fileName):
     with open(fileName) as file:
         last_line = file.readlines()[-1]
         return last_line.split(',')
+
+def _validMovement(mov,fileName):
+    fileLines = []
+    with open(fileName,'r') as file:
+        fileLines.append([line.split() for line in file])
+    for line in fileLines[0]:
+        lineData = line[0].split(',')
+        if lineData[1] == str(mov['position']['x']) and lineData[2] == str(mov['position']['y']):
+            return False
+    return True

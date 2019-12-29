@@ -54,8 +54,6 @@ def doMovement(mov):
     try:
         gameId = mov['id']
         player = mov['player']
-        position = mov['position']
-        gameData = None
         if not db.isGame(gameId):
             jsonData = {
                 "msg": "Partida não encontrada"
@@ -68,15 +66,13 @@ def doMovement(mov):
             }
             return jsonData, HTTPStatus.BAD_REQUEST
 
-        if db.finishedGame(gameId):
-            jsonData = db.getGameResult(gameId)
+        
+        jsonData, sts = db.getGameResult(gameId)
+        if sts == 'terminado':
             return jsonData, HTTPStatus.BAD_REQUEST
-
         else:
-            db.setMovement(mov)
-            jsonData = {
-                "msg": "Jogada Registrada com sucesso"
-            }
-            return jsonData, HTTPStatus.OK
+            jsonData, sts = db.setMovement(mov)
+            
+            return jsonData, sts
     except Exception as e:
         raise e
