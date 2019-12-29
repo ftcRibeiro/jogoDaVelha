@@ -53,11 +53,13 @@ def newMovement():
 
 
 if __name__ == '__main__':
+    print ("\n By Felipe Ribeiro\n")
+    print("\n https://www.linkedin.com/in/felipe-ribeiro-610635a4/")
     print("\n       __                  ____       _    __     ____         "+
         "\n      / /___  ____ _____  / __ \____ | |  / /__  / / /_  ____ _"+
         "\n __  / / __ \/ __ `/ __ \/ / / / __ `/ | / / _ \/ / __ \/ __ `/"+
         "\n/ /_/ / /_/ / /_/ / /_/ / /_/ / /_/ /| |/ /  __/ / / / / /_/ / "+
         "\n\____/\____/\__, /\____/_____/\__,_/ |___/\___/_/_/ /_/\__,_/  "+
         "\n           /____/                                              ")
-    print("\n Tic-tac-toe simulator backend"+"\n\n")
+    print("\n Tic-tac-toe simulator backend"+"\n")
     app.run()
