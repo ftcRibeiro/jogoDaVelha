@@ -16,8 +16,8 @@ def isGame(gameId):
         else:
             return False
 
-def finishedGame(gameData):
-    return True
+def finishedGame(gameId):
+    lastLine = _readLastLine(DATABASE + gameId + '.csv')
 
 def getGameResult(game):
     return {
@@ -27,11 +27,22 @@ def setMovement(mov):
         nextPlayer = 'O'
     else:
         nextPlayer = 'X'
-    with open('csvfile.csv','wb') as file:
+    fileName = DATABASE + mov['id']+'.csv'
+    with open(fileName,'wb') as file:
         file.write('\n%s,%s,%s,%s'%(mov['player'],mov['position']['x'],
                     mov['position']['y'],nextPlayer))
-def isTurn(player):
-    return True
+def isTurn(gameId, player):
+    fileName = DATABASE + gameId + '.csv'
+    lastLine = _readLastLine(fileName)
+    if player == lastLine[3]:
+        return True
+    else:
+        return False
 
 def getGameData(gameId):
     return True
+
+def _readLastLine(fileName):
+    with open(fileName) as file:
+        last_line = file.readlines()[-1]
+        return last_line.split(',')
