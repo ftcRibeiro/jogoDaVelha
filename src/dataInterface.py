@@ -8,7 +8,7 @@ def createGame(game):
 
 def isGame(gameId):
     name = gameId + '.csv'
-    for root, dirs, files in os.walk(DATABASE)
+    for root, dirs, files in os.walk(DATABASE):
         if name in files:
             return True
         else:
