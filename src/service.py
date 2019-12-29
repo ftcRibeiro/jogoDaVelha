@@ -55,12 +55,14 @@ def doMovement(mov):
         gameId = mov['id']
         player = mov['player']
         position = mov['position']
+        gameData = None
         if not db.isGame(gameId):
             jsonData = {
                 "msg": "Partida não encontrada"
             }
             return jsonData, HTTPStatus.BAD_REQUEST
-
+        else:
+            gameData = db.getGameData(gameId)
         if not db.isTurn(player):
             jsonData = {
                 "msg": "Não é turno do jogador"

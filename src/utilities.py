@@ -12,3 +12,5 @@ def genGameId(chars=string.digits + string.ascii_letters ):
 
 def genFirst():
     return random.choice('X'+'O')
+
+
