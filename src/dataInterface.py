@@ -2,6 +2,7 @@ import csv
 import os
 from os import path
 from http import HTTPStatus
+import pandas as pd
 DATABASE = 'src/database/'
 def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
@@ -24,7 +25,11 @@ def finishedGame(gameId):
     # lastLine = _readLastLine(DATABASE + gameId + '.csv')
     return False
 
-def getGameResult(game):
+def getGameResult(gameId):
+    fileName = DATABASE+gameId+'.csv'
+    gameData = pd.read_csv(fileName)
+    playerO = gameData.loc[gameData.player=='O'].loc[:,'x':'y']
+    playerX = gameData.loc[gameData.player=='X'].loc[:,'x':'y']
     return {}, 'aberto'
     
 def setMovement(mov):
