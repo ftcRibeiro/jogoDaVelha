@@ -71,8 +71,8 @@ def doMovement(mov):
         if sts == 'terminado':
             return jsonData, HTTPStatus.BAD_REQUEST
         else:
-            jsonData, sts = db.setMovement(mov)
+            jsonData, status = db.setMovement(mov)
             
-            return jsonData, sts
+            return jsonData, status
     except Exception as e:
         raise e
