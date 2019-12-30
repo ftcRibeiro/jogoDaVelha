@@ -8,6 +8,10 @@ import service as srv
 import utilities as utl
 import dataInterface as db
 import validation as vld
+import pandas as pd
+
+CONFIG = 'src/constants/'
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -51,6 +55,14 @@ def newMovement():
         response = make_response(jsonData,HTTPStatus.BAD_REQUEST)
         return response
 
+@app.route('/game/test',methods=['POST'])
+def test():
+    winList = []
+    for i in range(1,8):
+        fileName = CONFIG+'winConfig'+str(i)+'.csv'
+        df = pd.read_csv(fileName)
+        winList.append(df)
+    print(winList)
 
 if __name__ == '__main__':
     print ("\n By Felipe Ribeiro\n")

@@ -4,6 +4,8 @@ from os import path
 from http import HTTPStatus
 import pandas as pd
 DATABASE = 'src/database/'
+CONFIG = 'src/constants/'
+
 def createGame(game):
     fileName = DATABASE + game['id'] +'.csv'
     with open(fileName,'w',newline='') as file:
@@ -30,7 +32,37 @@ def getGameResult(gameId):
     gameData = pd.read_csv(fileName)
     playerO = gameData.loc[gameData.player=='O'].loc[:,'x':'y']
     playerX = gameData.loc[gameData.player=='X'].loc[:,'x':'y']
-    return {}, 'aberto'
+    winList = _getWinConfig()
+    for win in winList:
+        concatO = pd.concat([playerO,win])
+        winO = concatO[concatO.duplicated()]
+        concatX = pd.concat([playerX,win])
+        winX = concatX[concatX.duplicated()]
+
+        if len(winO) == 3:
+            jsonData =  {
+                "msg": "Partida Finalizada",
+                "winner": "O"
+            }
+            return jsonData, 'terminado'
+        elif len(winX) == 3:
+            jsonData =  {
+                "msg": "Partida Finalizada",
+                "winner": "X"
+            }
+            return jsonData, 'terminado'
+        elif len(playerO==3) and len(playerX)==3:
+            jsonData =  {
+                "msg": "Partida Finalizada",
+                "winner": "Draw"
+            }
+            return jsonData, 'terminado'
+        else:
+            jsonData = {
+                "msg": "Partida em progresso"
+            }
+            return jsonData, 'aberto'
+    
     
 def setMovement(mov):
     fileName = DATABASE + mov['id']+'.csv'
@@ -75,3 +107,10 @@ def _validMovement(mov,fileName):
         if lineData[1] == str(mov['position']['x']) and lineData[2] == str(mov['position']['y']):
             return False
     return True
+
+def _getWinConfig():
+    winList = []
+    for i in range(0,7):
+        df = pd.read_csv(CONFIG+'winConfig'+str(i)+'.csv')
+        winList.append(df)
+    return winList
