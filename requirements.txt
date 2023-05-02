@@ -2,7 +2,7 @@ aniso8601==8.0.0
 astroid==2.3.3
 Click==7.0
 colorama==0.4.3
-Flask==1.1.1
+Flask==2.2.5
 Flask-RESTful==0.3.7
 isort==4.3.21
 itsdangerous==1.1.0
